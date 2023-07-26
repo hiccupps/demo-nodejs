@@ -14,7 +14,25 @@
 
 var express = require('express');
 const axios = require("axios");
+const mysql = require("mysql2");
 var app = express();
+
+
+var connection = mysql.createConnection({
+  host     : 'mysql.hackuser53.svc.cluster.local',
+  user     : 'mysql',
+  password : 'password',
+  database : "sampledb"
+});
+ 
+connection.connect(function(err) {
+  if (err) {
+    console.error('error connecting: ' + err.stack);
+    return;
+  }
+ 
+  console.log('connected as id ' + connection.threadId);
+});
 
 
 async function testApi(){
@@ -28,7 +46,7 @@ async function testApi(){
 app.get('/', async function (req, res) {
  const checkingData =  await testApi();
  console.log("Data Check",checkingData);
-  res.status(200).json({message:"Hi from OpenShift",data:checkingData});
+  res.status(200).json({message:"Hi from Remote GitHub Repository",data:checkingData});
 });
 
 app.listen(8080, function () {
